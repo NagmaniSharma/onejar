@@ -1,0 +1,43 @@
+<project name="one-jar-appgen" default="build">
+
+    <!-- Hook into One-Jar project -->
+    <property name="one-jar.dir" location="../one-jar"/>
+    <import file="${one-jar.dir}/build.onejar.xml"/>
+
+	<target name="init">
+		<ant antfile="build.one-jar-project.xml" dir="../one-jar-$project$"/>
+	</target>
+	
+	<target name="compile">
+	    <mkdir dir="classes/src/appgen"/>
+		<javac destdir="classes/src/appgen" debug="true">
+	        <src path="src/appgen"/>
+	    </javac>
+	</target>
+	
+	<target name="clean" description="Clean up">
+		<delete dir="classes"/>
+		<delete file="one-jar-$project$.jar"/>
+	</target>
+	
+	<target name="build" depends="init, compile">
+		<mkdir dir="build"/>
+		<one-jar destfile="build/one-jar-appgen-${one-jar.version}.jar">
+			<manifest>
+			    <attribute name="One-Jar-Main-Class" value="com.simontuffs.onejar.appgen.AppGen"/>
+			</manifest>
+		    <main>
+			    <fileset dir="classes/src/appgen"/>
+		    	<fileset dir="../one-jar-appgen" includes="src/**"/>
+			</main>
+			<fileset dir="." includes="one-jar-$project$.jar" />
+		</one-jar>
+	</target>
+	
+	<target name="run.one-jar-appgen" depends="build" description="Run AppGen as a one-jar">
+		<input message="Enter project path (project name is last segment):" addproperty="project.path"/>
+		<input message="Enter project java package:" addproperty="project.pkg"/>
+        <java fork="true" jar="build/one-jar-appgen-${one-jar.version}.jar" args="${project.path} ${project.pkg}"/>
+	</target>
+
+</project>

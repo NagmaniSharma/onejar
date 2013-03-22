@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="one-jar-$project$.jar" basedir="." default="build">
+
+	<property name="one-jar.dir" location="../one-jar"/>
+	<import file="${one-jar.dir}/dist/one-jar-ant-task.xml"/>
+    <target name="build">
+        <!-- Make the project-template -->
+        <!-- Push to one-jar-appgen -->
+        <jar destfile="../one-jar-appgen/one-jar-$project$.jar">
+            <fileset dir="." includes="src/**,test/**,junit/**,ide/**,lib/**,.classpath,.project,build.xml"/>
+            <fileset dir=".." includes="one-jar/build.onejar.xml"/>
+            <fileset dir=".." includes="one-jar/dist/one-jar-ant-task-${one-jar.version}.jar,one-jar/dist/one-jar-boot-${one-jar.version}.jar,one-jar/dist/one-jar-ant-task.xml"/>
+            <fileset dir=".." includes="one-jar/lib/junit*.jar"/>
+        </jar>
+    </target>
+
+</project>
